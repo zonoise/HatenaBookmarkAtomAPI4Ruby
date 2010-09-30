@@ -69,14 +69,15 @@ class HatebuAPI
     #######################################
     def get_feed_by_tag(tag, page_num=1)
         path =URI.encode("/atom/feed?tag=#{tag}")
-        #path ="/atom/feed?tag=#{tag}"
+        pp path.size
+        pp path
         page_count=page_num
         entries=Array.new
         while 0 < page_count && nil != path
             res = @http.get(path,
                  'Accept' => 'application/x.atom+xml, application/xml, text/xml, */*',
                  'X-WSSE'=> @credential_string )
-            puts res.body
+           # puts res.body
             entries=entries + parse_feed(res.body)
             path = get_next_page(res.body)
             page_count=page_count-1

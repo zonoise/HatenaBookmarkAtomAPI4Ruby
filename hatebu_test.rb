@@ -3,15 +3,22 @@
 require 'test/unit'
 require 'hatebu'
 
+
 class Hatebu_test < Test::Unit::TestCase
 
     #
     #
     #
     def setup
-       id      ="zonoise"
-       password="68391566"
-       @hatebu = HatebuAPI.new(id,password)
+       if nil == @id 
+           print 'input Hatena id:'
+           @id = gets.chomp
+       end
+       if nil == @password 
+           print 'input password:'
+           @password = gets.chomp
+       end
+       @hatebu = HatebuAPI.new(@id,@password)
     end
 
  
@@ -111,14 +118,12 @@ class Hatebu_test < Test::Unit::TestCase
         }
     end
 
-    # ブックマーク削除のテスト
+    # ブックマーク削除のテスト 新規登録->削除
     def test_delete_entry
-   #     entry={:url => 'http://www.jma.go.jp/jma/index.html',
-   #            :summary => 'tenki'}
-   #     id = @hatebu.create_entry(entry)
-#
-#        res = @hatebu.delete_entry(id)
-        res = @hatebu.delete_entry("551389")
+        entry={:url => 'http://www.jma.go.jp/jma/index.html',
+               :summary => 'tenki'}
+        id = @hatebu.create_entry(entry)
+        res = @hatebu.delete_entry(id)
         pp res     
     end
 end
