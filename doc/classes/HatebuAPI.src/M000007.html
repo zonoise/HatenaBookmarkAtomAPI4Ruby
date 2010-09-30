@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>get_entry (HatebuAPI)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File hatebu.rb, line 181</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">get_entry</span>(<span class="ruby-identifier">id</span>)
+        <span class="ruby-identifier">path</span>=<span class="ruby-node">&quot;/atom/edit/#{id}&quot;</span>
+        <span class="ruby-identifier">res</span> = <span class="ruby-ivar">@http</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">path</span>,
+                   <span class="ruby-value str">'Accept'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value str">'application/x.atom+xml, application/xml, text/xml, */*'</span>,
+                   <span class="ruby-value str">'X-WSSE'</span>=<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@credential_string</span> )
+        <span class="ruby-comment cmt">#puts res.body</span>
+        <span class="ruby-identifier">parse_entry</span>(<span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span>)
+
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

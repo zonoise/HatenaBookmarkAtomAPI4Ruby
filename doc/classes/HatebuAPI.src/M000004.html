@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>put_entry (HatebuAPI)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File hatebu.rb, line 96</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">put_entry</span>(<span class="ruby-identifier">id</span>,<span class="ruby-identifier">summary</span>)
+        <span class="ruby-identifier">xml</span> = <span class="ruby-value str">&quot;          &lt;entry xmlns=\&quot;http://purl.org/atom/ns#\&quot;&gt;\n             &lt;summary type=\&quot;text/plain\&quot;&gt;&lt;/summary&gt;\n          &lt;/entry&gt;\n&quot;</span>
+
+        <span class="ruby-identifier">doc</span> = <span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">xml</span>)
+        <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">elements</span>[<span class="ruby-value str">'/entry/summary'</span>].<span class="ruby-identifier">add_text</span>(<span class="ruby-identifier">summary</span>)
+
+        <span class="ruby-comment cmt"># REXML -&gt; String</span>
+        <span class="ruby-identifier">data</span>=<span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span>
+        <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">data</span>)
+
+        <span class="ruby-comment cmt">#make request</span>
+        <span class="ruby-identifier">path</span>=<span class="ruby-node">&quot;/atom/edit/#{id}&quot;</span>
+        <span class="ruby-identifier">req</span>=<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span><span class="ruby-operator">::</span><span class="ruby-constant">Put</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">path</span>)
+        <span class="ruby-identifier">req</span>[<span class="ruby-value str">'Accept'</span>]= <span class="ruby-value str">'application/x.atom+xml,application/xml,text/xml,*/*'</span>,
+        <span class="ruby-identifier">req</span>[<span class="ruby-value str">'X-WSSE'</span>]= <span class="ruby-ivar">@credential_string</span>
+
+        <span class="ruby-comment cmt">#YHAAAA!!!</span>
+        <span class="ruby-identifier">res</span> = <span class="ruby-ivar">@http</span>.<span class="ruby-identifier">request</span>(<span class="ruby-identifier">req</span>,<span class="ruby-identifier">data</span>)
+        <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">res</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

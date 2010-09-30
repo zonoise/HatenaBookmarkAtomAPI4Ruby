@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>create_entry (HatebuAPI)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File hatebu.rb, line 140</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">create_entry</span>(<span class="ruby-identifier">entry</span>)
+
+        <span class="ruby-comment cmt"># template</span>
+        <span class="ruby-identifier">xml</span> = <span class="ruby-value str">&quot;              &lt;entry xmlns=\&quot;http://purl.org/atom/ns#\&quot;&gt;\n                  &lt;link rel=\&quot;related\&quot; type=\&quot;text/html\&quot;  /&gt;\n                  &lt;summary type=\&quot;text/plain\&quot;&gt;&lt;/summary&gt;\n              &lt;/entry&gt;\n&quot;</span> 
+       
+        <span class="ruby-comment cmt"># edit xml</span>
+        <span class="ruby-identifier">doc</span> = <span class="ruby-constant">REXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">xml</span>)
+        <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">elements</span>[<span class="ruby-value str">'/entry/link'</span>].<span class="ruby-identifier">add_attribute</span>(<span class="ruby-value str">'href'</span>,<span class="ruby-identifier">entry</span>[<span class="ruby-identifier">:url</span>])
+        <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">elements</span>[<span class="ruby-value str">'/entry/summary'</span>].<span class="ruby-identifier">add_text</span>(<span class="ruby-identifier">entry</span>[<span class="ruby-identifier">:summary</span>])
+
+        <span class="ruby-identifier">data</span>=<span class="ruby-constant">String</span>.<span class="ruby-identifier">new</span> 
+        <span class="ruby-identifier">doc</span>.<span class="ruby-identifier">write</span>(<span class="ruby-identifier">data</span>)
+
+        <span class="ruby-comment cmt">#make request</span>
+        <span class="ruby-identifier">path</span>=<span class="ruby-value str">'/atom/post'</span>
+     
+        <span class="ruby-identifier">req</span>=<span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span><span class="ruby-operator">::</span><span class="ruby-constant">Post</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">path</span>)
+        <span class="ruby-identifier">req</span>[<span class="ruby-value str">'Accept'</span>]= <span class="ruby-value str">'application/x.atom+xml,application/xml,text/xml,*/*'</span>,
+        <span class="ruby-identifier">req</span>[<span class="ruby-value str">'X-WSSE'</span>]= <span class="ruby-ivar">@credential_string</span>
+
+        <span class="ruby-identifier">res</span> = <span class="ruby-ivar">@http</span>.<span class="ruby-identifier">request</span>(<span class="ruby-identifier">req</span>,<span class="ruby-identifier">data</span>)
+        <span class="ruby-keyword kw">case</span> <span class="ruby-identifier">res</span>
+        <span class="ruby-keyword kw">when</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTPSuccess</span> <span class="ruby-keyword kw">then</span>
+            <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">get_edit_url</span>(<span class="ruby-identifier">res</span>.<span class="ruby-identifier">body</span>)
+        <span class="ruby-keyword kw">else</span>
+            <span class="ruby-identifier">raise</span>  <span class="ruby-value str">&quot;Http Response != Success&quot;</span>
+        <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>new (HatebuAPI)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File hatebu.rb, line 28</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">id</span>,<span class="ruby-identifier">password</span>)
+        <span class="ruby-identifier">username</span>=<span class="ruby-identifier">id</span>
+        <span class="ruby-identifier">password</span>=<span class="ruby-identifier">password</span>
+
+        <span class="ruby-identifier">nonce</span> =  <span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>.<span class="ruby-identifier">digest</span>(<span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-value str">&quot;%f&quot;</span>, <span class="ruby-identifier">rand</span>()) <span class="ruby-operator">+</span> <span class="ruby-identifier">$$</span>.<span class="ruby-identifier">to_s</span>))
+        <span class="ruby-identifier">created</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>.<span class="ruby-identifier">utc</span>.<span class="ruby-identifier">iso8601</span>
+        <span class="ruby-identifier">password_digest</span> = <span class="ruby-constant">Base64</span>.<span class="ruby-identifier">encode64</span>(<span class="ruby-constant">OpenSSL</span><span class="ruby-operator">::</span><span class="ruby-constant">Digest</span><span class="ruby-operator">::</span><span class="ruby-constant">SHA1</span>.<span class="ruby-identifier">digest</span>(
+                              <span class="ruby-identifier">nonce</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">created</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">password</span> <span class="ruby-operator">||</span> <span class="ruby-value str">''</span>)).<span class="ruby-identifier">chop</span>
+        <span class="ruby-ivar">@credential_string</span> =
+            <span class="ruby-identifier">sprintf</span> <span class="ruby-value str">%(UsernameToken Username=&quot;%s&quot;, PasswordDigest=&quot;%s&quot;, Nonce=&quot;%s&quot;, Created=&quot;%s&quot;)</span>,
+                    <span class="ruby-identifier">username</span>,<span class="ruby-identifier">password_digest</span>, <span class="ruby-constant">Base64</span>.<span class="ruby-identifier">encode64</span>(<span class="ruby-identifier">nonce</span>).<span class="ruby-identifier">chop</span>,<span class="ruby-identifier">created</span>
+        <span class="ruby-ivar">@http</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span>.<span class="ruby-identifier">start</span>(<span class="ruby-value str">'b.hatena.ne.jp'</span>,<span class="ruby-value">80</span>)
+
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>
